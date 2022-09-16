@@ -18,6 +18,9 @@ Vagrant.configure("2") do |config|
       v.memory = 512
     end
 
+    # behind proxy ?
+    # use special procedure to add corp CA chain
+    # see plugins install for details 
     sb.vm.provision "shell" do |s|
       s.inline = "dnf install -y wget"
     end
@@ -34,6 +37,12 @@ Vagrant.configure("2") do |config|
     #sb.vm.provision "shell", path: "install_molecule.sh", privileged: false
   end
 
+  # molecule : ready to use box for Ansible+molecule
+  # to recreate :
+  # run install_molecule.sh on ubuntu vm
+  # stop the vm
+  # vagrant package --output ${SOMEWHERE_SAFE}/ubuntu22.04-molecule4.0.1.box ubuntu
+  # vagrant box add ${SOMEWHERE_SAFE}/ubuntu22.04-molecule4.0.1.box --name "ubuntu/22.04-molecule4.0.1"
   config.vm.define "molecule" do |sb|
     sb.vm.box = "ubuntu/22.04-molecule4.0.1"
     sb.vm.network "forwarded_port", guest: 80, host: 8888
@@ -56,4 +65,3 @@ Vagrant.configure("2") do |config|
   end
 
 end
-
